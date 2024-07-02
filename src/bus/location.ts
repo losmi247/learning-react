@@ -1,15 +1,15 @@
 import {BusStop} from "./bus_stop";
 
 export class Location {
-    public longitude: number;
-    public latitude: number;
+    longitude: number;
+    latitude: number;
 
     constructor(longitude: number, latitude: number) {
         this.longitude = longitude;
         this.latitude = latitude;
     }
 
-    public async getBusStopsNearLocation() {
+    public async getNearbyBusStops() {
         const response = await fetch(`https://api.tfl.gov.uk/StopPoint?stopTypes=NaptanPublicBusCoachTram&lat=${this.latitude}&lon=${this.longitude}&radius=100`)
         const data: any = await response.json();
 
@@ -18,7 +18,7 @@ export class Location {
         );
     }
 
-    public static async getLocationFromPostcode(postcode: string) {
+    public static async createLocation(postcode: string) {
         const response = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
         const data: any = await response.json();
 
