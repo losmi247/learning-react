@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 
-import { Location } from "./bus/location";
-import { BusBoard } from "./components/BusBoard";
-import { BusStop } from "./bus/bus_stop";
+import { Location } from "../bus/location";
+import { BusBoard } from "../components/BusBoard";
+import { BusStop } from "../bus/bus_stop";
+
+import Spinner from 'react-bootstrap/Spinner';
+import {NavigationBar} from "../components/NavigationBar";
 
 const getBusStopsNearPostcode = async (postcode: string) => {
   if(postcode === ""){
@@ -22,16 +25,16 @@ const getBusStopsNearPostcode = async (postcode: string) => {
   }
 }
 
-function App(): React.ReactElement {
+export const BusArrivalLookup = () => {
   const [postcode, setPostcode] = useState<string>("");
   const [stops, setStops] = useState<BusStop[]>([]);
-  const [showLoading, setShowLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   async function formHandler(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault(); // to stop the form refreshing the page when it submits
-    setShowLoading(true);
+    setIsLoading(true);
     setStops(await getBusStopsNearPostcode(postcode));
-    setShowLoading(false);
+    setIsLoading(false);
   }
 
   function updatePostcode(data: React.ChangeEvent<HTMLInputElement>): void {
@@ -40,21 +43,21 @@ function App(): React.ReactElement {
 
   return (
     <>
-      <h1> BusBoard </h1>
-      <form action="" style={{textAlign: "left"}} onSubmit={ formHandler }>
-        <label htmlFor="postcodeInput"> Enter the {<b>postcode</b>}: </label>
+      <NavigationBar />
+      <form action=""  onSubmit={ formHandler }>
+        <label htmlFor="postcodeInput"> Enter the postcode:</label>
         <input type="text" id="postcodeInput" onChange={  updatePostcode }/>
-        <input type="submit" value="Submit"/>
+        <input type="submit" value="Submit" disabled={isLoading}/>
       </form>
-      <div style={{textAlign: "center"}}>
-        { showLoading ?
-            <h1>Loading...</h1>
-            :
-            <BusBoard stops={ stops }/>
-        }
-      </div>
+      {isLoading ?
+          <div className="text-center">
+            <Spinner animation="border" role="status" >
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+          :
+          <BusBoard stops={stops}/>
+      }
     </>
   );
 }
-
-export default App;

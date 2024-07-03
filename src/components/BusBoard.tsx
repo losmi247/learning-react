@@ -1,11 +1,13 @@
 import { BusStop } from "../bus/bus_stop";
 import { BusStopCard } from "./BusStopCard";
 
-interface BusBoardProp {
+import './BusBoard.scss';
+
+interface BusBoardProps {
     stops: BusStop[];
 }
 
-export const BusBoard = ({stops}: BusBoardProp) => {
+export const BusBoard = ({stops}: BusBoardProps) => {
     const listItems = stops.map(stop =>
         <li key={ stop.stopCode }>
             <BusStopCard stop={ stop }></BusStopCard>
