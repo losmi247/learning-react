@@ -22,6 +22,11 @@ export class Location {
         const response = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
         const data: any = await response.json();
 
-        return new Location(data["result"]["longitude"], data["result"]["latitude"]);
+        try {
+            return new Location(data["result"]["longitude"], data["result"]["latitude"]);
+        }
+        catch (error) {
+            return undefined;
+        }
     }
 }

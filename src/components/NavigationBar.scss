@@ -3,6 +3,13 @@
   font-size: xx-large;
   line-height: 2rem;
 }
+
+.nav-link:active {
+  color: white!important;
+  font-size: xx-large;
+  line-height: 2rem;
+  text-decoration: underline;
+}
 .navbar-text {
   color: white!important;
   margin-right: 2.5rem;
@@ -13,4 +20,8 @@
   height: 1rem;
   vertical-align: center;
   font-size: x-large;
+}
+
+.active {
+  color: red;
 }

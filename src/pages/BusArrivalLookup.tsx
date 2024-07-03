@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
 
 import { Location } from "../bus/location";
-import { BusBoard } from "../components/BusBoard";
 import { BusStop } from "../bus/bus_stop";
 
-import Spinner from 'react-bootstrap/Spinner';
 import {NavigationBar} from "../components/NavigationBar";
+import { BusBoard } from "../components/BusBoard";
+
+import Spinner from 'react-bootstrap/Spinner';
+import Alert from 'react-bootstrap/Alert';
+
 
 const getBusStopsNearPostcode = async (postcode: string) => {
   if(postcode === ""){
@@ -13,27 +16,43 @@ const getBusStopsNearPostcode = async (postcode: string) => {
   }
   else{
     let location = await Location.createLocation(postcode);
-    let busStops = await location.getNearbyBusStops();
 
-    let stops = new Array(0);
-    for(let busStop of busStops) {
-      await busStop.getArrivingBuses();
-      stops.push(busStop);
+    if(location === undefined) {
+      return undefined;
     }
+    else{
+      let busStops = await location.getNearbyBusStops();
 
-    return stops;
+      let stops = new Array(0);
+      for(let busStop of busStops) {
+        await busStop.getArrivingBuses();
+        stops.push(busStop);
+      }
+
+      return stops;
+    }
   }
 }
 
 export const BusArrivalLookup = () => {
   const [postcode, setPostcode] = useState<string>("");
   const [stops, setStops] = useState<BusStop[]>([]);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [postcodeError, setPostcodeError] = useState(false);
 
   async function formHandler(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault(); // to stop the form refreshing the page when it submits
     setIsLoading(true);
-    setStops(await getBusStopsNearPostcode(postcode));
+
+    let busStops = await getBusStopsNearPostcode(postcode);
+    if(busStops === undefined) {
+      setPostcodeError(true);
+    }
+    else {
+      setPostcodeError(false);
+      setStops(busStops);
+    }
+
     setIsLoading(false);
   }
 
@@ -56,7 +75,14 @@ export const BusArrivalLookup = () => {
             </Spinner>
           </div>
           :
-          <BusBoard stops={stops}/>
+          <>
+          {postcodeError ?
+                <div className="text-center"><Alert variant="danger" > Bad Postcode </Alert></div>
+
+                :
+                <BusBoard stops={stops}/>
+          }
+          </>
       }
     </>
   );

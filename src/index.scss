@@ -1,6 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Lato);
 @import "../node_modules/bootstrap/scss/bootstrap";
 
+@import "palette";
+
 $font-family-sans-serif: "Lato", sans-serif;
 
 body {
@@ -12,7 +14,7 @@ h1 {
   text-align: center;
   font-size: xxx-large;
   font-weight: bolder;
-  color: white;
+  color: $white;
 }
 h2 {
   margin: 1rem;
@@ -24,7 +26,7 @@ input[type="text"] {
   padding: 0.5rem 1rem;
   border-bottom-left-radius: 0.2rem;
   border-top-left-radius: 0.2rem;
-  background-color: whitesmoke;
+  background-color: $bus-stop-card-background;
   border: none;
 }
 
@@ -33,23 +35,23 @@ input[type="text"]:focus {
   padding: 0.5rem 1rem;
   border-bottom-left-radius: 0.2rem;
   border-top-left-radius: 0.2rem;
-  background-color: whitesmoke;
+  background-color: $bus-stop-card-background;
   border: none;
 }
 input[type="submit"]:hover {
   font-family: $font-family-sans-serif;
-  background-color: rgb(0, 11, 119);
+  background-color: $tfl-blue-dark;
   padding: 0.5rem 1rem;
-  color: white;
+  color: $white;
   border: none;
   border-bottom-right-radius: 0.2rem;
   border-top-right-radius: 0.2rem;
 }
 input[type="submit"] {
   font-family: $font-family-sans-serif;
-  background-color: rgb(0, 15, 159);
+  background-color: $tfl-blue;
   padding: 0.5rem 1rem;
-  color: white;
+  color: $white;
   border: none;
   border-bottom-right-radius: 0.2rem;
   border-top-right-radius: 0.2rem;
@@ -70,21 +72,29 @@ form {
 }
 
 .container-fluid{
-  background-color: rgb(0, 15, 159);
+  background-color: $tfl-blue;
   padding: 4rem;
   text-align: center;
 }
 .spinner-border {
   margin: 10rem;
-  color: red;
+  color: $bus-red;
   font-size: xx-large;
   width: 5rem;
   height: 5rem;
 }
 .table th, .table td, .table {
-  background-color: whitesmoke;
+  background-color: $bus-stop-card-background;
 }
 .badge {
-  background-color: rgb(225, 37, 27)!important;
+  background-color: $bus-red!important;
   font-family: $font-family-sans-serif;
+}
+.alert {
+  color: $alert-red;
+  font-weight: bold;
+  width: 50%;
+  border-radius: 0.5rem;
+  display: inline-block;
+  margin: 1rem;
 }
