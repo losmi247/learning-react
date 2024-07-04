@@ -1,73 +1,77 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
-import { Location } from "../bus/location";
-import { BusStop } from "../bus/bus_stop";
+import { BusBoardApi } from "../busboard-api/bus_board_api";
+import { BusStopStatus } from "../bus/bus_stop_status";
 
-import {NavigationBar} from "../components/NavigationBar";
+import { ErrorBar } from "../components/ErrorBar";
 import { BusBoard } from "../components/BusBoard";
 
 import Spinner from 'react-bootstrap/Spinner';
-import Alert from 'react-bootstrap/Alert';
+import Form from 'react-bootstrap/Form'
+import InputGroup from "react-bootstrap/InputGroup";
+import Button from 'react-bootstrap/Button'
+
+const getBusStopStatusesNearPostcode = async (postcode: string) => {
+    let location = await BusBoardApi.createLocation(postcode);
+    let busStops = await BusBoardApi.getBusStopsNearLocation(location);
 
 
-const getBusStopsNearPostcode = async (postcode: string) => {
-  if(postcode === ""){
-    return [];
-  }
-  else{
-    let location = await Location.createLocation(postcode);
-
-    if(location === undefined) {
-      return undefined;
-    }
-    else{
-      let busStops = await location.getNearbyBusStops();
-
-      let stops = new Array(0);
-      for(let busStop of busStops) {
-        await busStop.getArrivingBuses();
-        stops.push(busStop);
-      }
-
-      return stops;
-    }
-  }
+    return await Promise.all(
+        busStops.map(async (busStop) =>
+            new BusStopStatus(busStop, await BusBoardApi.getArrivingBuses(busStop.stopCode))
+        )
+    );
 }
 
 export const BusArrivalLookup = () => {
   const [postcode, setPostcode] = useState<string>("");
-  const [stops, setStops] = useState<BusStop[]>([]);
+  const [busStopStatuses, setBusStopStatuses] = useState<BusStopStatus[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [postcodeError, setPostcodeError] = useState(false);
+  const [error, setError] = useState<Error|null>(null);
 
-  async function formHandler(event: React.FormEvent<HTMLFormElement>): Promise<void> {
-    event.preventDefault(); // to stop the form refreshing the page when it submits
+  const updateBusStatuses = useCallback(async () => {
     setIsLoading(true);
+    setError(null);
 
-    let busStops = await getBusStopsNearPostcode(postcode);
-    if(busStops === undefined) {
-      setPostcodeError(true);
+    try {
+      setBusStopStatuses(await getBusStopStatusesNearPostcode(postcode));
     }
-    else {
-      setPostcodeError(false);
-      setStops(busStops);
+    catch (error: any) {
+      setError(error);
     }
 
     setIsLoading(false);
+  }, [postcode]);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const submit = document.getElementById('submit') as HTMLElement;
+      submit.click();
+      //await updateBusStatuses();
+    }, 30 * 1000);
+    return () => clearInterval(interval);
+  }, [updateBusStatuses]);
+
+  async function formHandler(event: React.FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault(); // to stop the form refreshing the page when it submits
+    await updateBusStatuses();
   }
 
   function updatePostcode(data: React.ChangeEvent<HTMLInputElement>): void {
-    setPostcode(data.target.value)
+    setPostcode(data.target.value);
   }
 
   return (
     <>
-      <NavigationBar />
-      <form action=""  onSubmit={ formHandler }>
-        <label htmlFor="postcodeInput"> Enter the postcode:</label>
-        <input type="text" id="postcodeInput" onChange={  updatePostcode }/>
-        <input type="submit" value="Submit" disabled={isLoading}/>
-      </form>
+      <Form className="form" id="form" onSubmit={ formHandler }>
+        <Form.Group className="form-group">
+          <Form.Label className="form-label" htmlFor="postcodeInput"> Enter the postcode:</Form.Label>
+          <InputGroup>
+            <Form.Control onChange={ updatePostcode } type="text" required/>
+            <Button className="form-button" type="submit" value="Submit"  id="submit" disabled={isLoading}>Submit</Button>
+          </InputGroup>
+        </Form.Group>
+      </Form>
       {isLoading ?
           <div className="text-center">
             <Spinner animation="border" role="status" >
@@ -75,14 +79,7 @@ export const BusArrivalLookup = () => {
             </Spinner>
           </div>
           :
-          <>
-          {postcodeError ?
-                <div className="text-center"><Alert variant="danger" > Bad Postcode </Alert></div>
-
-                :
-                <BusBoard stops={stops}/>
-          }
-          </>
+          (error === null) ? <BusBoard busStopStatuses={busStopStatuses}/> : <ErrorBar error={error} />
       }
     </>
   );

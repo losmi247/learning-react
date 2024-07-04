@@ -1,16 +1,16 @@
-import { BusStop } from "../bus/bus_stop";
 import { BusStopCard } from "./BusStopCard";
 
 import './BusBoard.scss';
+import {BusStopStatus} from "../bus/bus_stop_status";
 
 interface BusBoardProps {
-    stops: BusStop[];
+    busStopStatuses: BusStopStatus[];
 }
 
-export const BusBoard = ({stops}: BusBoardProps) => {
-    const listItems = stops.map(stop =>
-        <li key={ stop.stopCode }>
-            <BusStopCard stop={ stop }></BusStopCard>
+export const BusBoard = ({busStopStatuses}: BusBoardProps) => {
+    const listItems = busStopStatuses.map(busStopStatus =>
+        <li key={ busStopStatus.busStop.stopCode }>
+            <BusStopCard busStopStatus={ busStopStatus }></BusStopCard>
         </li>
     );
 

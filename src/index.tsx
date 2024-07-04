@@ -13,9 +13,10 @@ export const App = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={ <HomePage /> }></Route>
-                <Route path="/lookup" element={ <BusArrivalLookup /> }></Route>
-                <Route path="/history" element={ <BusHistory /> }></Route>
+                <Route path="/" element={ <HomePage /> }>
+                    <Route path="/lookup" element={ <BusArrivalLookup /> }></Route>
+                    <Route path="/history" element={ <BusHistory /> }></Route>
+                </Route>
             </Routes>
         </BrowserRouter>
     );

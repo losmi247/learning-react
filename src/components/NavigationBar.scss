@@ -1,27 +1,49 @@
+@import '../palette.scss';
+
 .nav-link {
   color: white!important;
   font-size: xx-large;
   line-height: 2rem;
 }
 
-.nav-link:active {
-  color: white!important;
-  font-size: xx-large;
-  line-height: 2rem;
-  text-decoration: underline;
+.nav-link:hover {
+  color: darkgray!important;
 }
+
 .navbar-text {
   color: white!important;
   margin-right: 2.5rem;
-  font-size: xxx-large;
+  font-size: xx-large;
   line-height: 2rem;
 }
 .navbar {
-  height: 1rem;
   vertical-align: center;
   font-size: x-large;
+  background-color: $tfl-blue;
+  padding: 1.5rem!important;
+
 }
 
-.active {
-  color: red;
+.nav-active {
+  color: lightgray!important;
+}
+
+.no-margin {
+  margin: 0!important;
+  padding: 0;
+}
+
+.container-fluid {
+  padding: 0 1rem!important;
+  justify-content: flex-start;
+}
+
+.navbar-collapse {
+  background-color: $tfl-blue;
+  padding: 0rem 0;
+}
+
+.navbar-toggler {
+  border-color: white!important;
+  border-width: 0.1rem!important;
 }
