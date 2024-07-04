@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import { BusBoardApi } from "../busboard-api/bus_board_api";
+import * as BusBoardApi from "../busboard-api/bus_board_api";
 import { BusStopStatus } from "../bus/bus_stop_status";
 
 import { ErrorBar } from "../components/ErrorBar";
