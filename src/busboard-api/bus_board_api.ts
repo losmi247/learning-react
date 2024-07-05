@@ -3,6 +3,11 @@ import {Location} from "../bus/location";
 
 import {ApiParser} from "./api_parser";
 
+interface BusStopDistance {
+    busStop: BusStop;
+    distance: number;
+}
+
 export async function getArrivingBuses(stopCode: string) {
     const response = await fetch(`https://api.tfl.gov.uk/StopPoint/${stopCode}/Arrivals?app_key=8b617c3c28114b72ae60142e8d056399`);
     const data = await response.json() as any[];
@@ -18,12 +23,17 @@ export async function getBusStopsNearLocation(location: Location) {
 
     //let distances = (data["stopPoints"] as Array<any>).map((stopJSON) => stopJSON['distance']);
 
-    let busStops = (data["stopPoints"] as Array<any>).map((stopJSON) =>
-        new BusStop(stopJSON["commonName"], stopJSON["id"])
-    );
-    return busStops.sort((busStopA, busStopB) =>
+    console.log(data["stopPoints"])
+
+    let busStops:BusStopDistance[] = (data["stopPoints"] as Array<any>).map((stopJSON) => {
+            return {busStop: new BusStop(stopJSON["commonName"], stopJSON["id"]),
+                distance: stopJSON["distance"]}
+    }
 
     );
+    return busStops.sort((busStopA, busStopB) =>
+        busStopA.distance - busStopB.distance
+    ).map((busStopDistance) => busStopDistance.busStop);
 }
 
 export async function createLocation(postcode: string) {
@@ -43,3 +53,4 @@ export async function getBusLines() {
 
      return data.map(ApiParser.parseBusLineJSON);
 }
+

@@ -65,6 +65,7 @@ ul {
 .form-group {
   display: flex;
   justify-content: center;
+  vertical-align: middle;
 
 }
 
@@ -76,6 +77,12 @@ ul {
 
 .form-label{
   padding-right: 1rem;
+  margin: 0;
+  justify-content: center;
+  text-align: center;
+  alignment-baseline: bottom;
+  vertical-align: middle!important;
+  display: inline;
 }
 .button {
   font-family: $font-family-sans-serif;

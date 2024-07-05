@@ -1,6 +1,9 @@
 import { BusLineCard } from "./BusLineCard";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
-import './BusBoard.scss';
+
+import './BusLineBoard.scss';
 import {BusLine} from "../bus/bus_line";
 
 interface BusLineBoardProps {
@@ -9,15 +12,13 @@ interface BusLineBoardProps {
 
 export const BusLineBoard = ({busLines}: BusLineBoardProps) => {
     const listItems = busLines.map(busLine =>
-        <li key={ busLine.lineName }>
-            <BusLineCard busLine={ busLine }></BusLineCard>
-        </li>
+            <Col xs={true}><BusLineCard busLine={ busLine }></BusLineCard></Col>
     );
 
     return (
-        <div className="bus-board">
-            <h2> Nearby Stops </h2>
-            <ul> {listItems} </ul>
+        <div className="bus-line-board">
+            <h2> All Bus Lines </h2>
+            <Row> {listItems} </Row>
         </div>
     );
 }

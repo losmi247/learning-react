@@ -65,9 +65,9 @@ export const BusArrivalLookup = () => {
     <>
       <Form className="form" id="form" onSubmit={ formHandler }>
         <Form.Group className="form-group">
-          <Form.Label className="form-label" htmlFor="postcodeInput"> Enter the postcode:</Form.Label>
+          {/*<Form.Label className="form-label" htmlFor="postcodeInput"> Enter the postcode:</Form.Label>*/}
           <InputGroup>
-            <Form.Control onChange={ updatePostcode } type="text" required/>
+            <Form.Control onChange={ updatePostcode } type="text" required placeholder="Enter Postcode"/>
             <Button className="form-button" type="submit" value="Submit"  id="submit" disabled={isLoading}>Submit</Button>
           </InputGroup>
         </Form.Group>
